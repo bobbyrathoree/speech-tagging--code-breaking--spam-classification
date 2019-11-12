@@ -11,7 +11,7 @@
 
 import random
 import math
-import copy 
+import copy
 import sys
 import encode
 
@@ -20,8 +20,8 @@ def break_code(string, corpus):
     return "Not implemented yet!"
 
 
-if __name__== "__main__":
-    if(len(sys.argv) != 4):
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
         raise Exception("usage: ./break_code.py coded-file corpus output-file")
 
     encoded = encode.read_clean_file(sys.argv[1])
@@ -30,4 +30,3 @@ if __name__== "__main__":
 
     with open(sys.argv[3], "w") as file:
         print(decoded, file=file)
-

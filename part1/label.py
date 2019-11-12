@@ -6,7 +6,7 @@
 # There should be no need to modify this file.
 # Edit pos_solver.py instead!
 #
-# To get started, try running: 
+# To get started, try running:
 #
 #   python ./label.py bc.train bc.test.tiny
 #
@@ -19,10 +19,10 @@ import sys
 #
 def read_data(fname):
     exemplars = []
-    file = open(fname, 'r');
+    file = open(fname, "r")
     for line in file:
         data = tuple([w.lower() for w in line.split()])
-        exemplars += [ (data[0::2], data[1::2]), ]
+        exemplars += [(data[0::2], data[1::2])]
 
     return exemplars
 
@@ -49,20 +49,24 @@ print("Testing classifiers...")
 scorer = Score()
 
 Algorithms = ("Simple", "HMM", "Complex")
-Algorithm_labels = [ str(i+1) + ". " + Algorithms[i] for i in range(0, len(Algorithms) ) ]
+Algorithm_labels = [
+    str(i + 1) + ". " + Algorithms[i] for i in range(0, len(Algorithms))
+]
 for (s, gt) in test_data:
 
-    outputs = {"0. Ground truth" : gt}
-        
+    outputs = {"0. Ground truth": gt}
+
     # run all algorithms on the sentence
     for (algo, label) in zip(Algorithms, Algorithm_labels):
-        outputs[label] = solver.solve( algo, s) 
+        outputs[label] = solver.solve(algo, s)
 
     # calculate posteriors for each output under each model
-    posteriors = { o: { a: solver.posterior( a, s, outputs[o] ) for a in Algorithms } for o in outputs }
+    posteriors = {
+        o: {a: solver.posterior(a, s, outputs[o]) for a in Algorithms} for o in outputs
+    }
     Score.print_results(s, outputs, posteriors, Algorithms)
-        
+
     scorer.score(outputs, gt)
     scorer.print_scores()
-    
+
     print("----")

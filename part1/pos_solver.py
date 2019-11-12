@@ -36,17 +36,16 @@ class Solver:
     # Functions for each algorithm. Right now this just returns nouns -- fix this!
     #
     def simplified(self, sentence):
-        return [ "noun" ] * len(sentence)
+        return ["noun"] * len(sentence)
 
     def complex_mcmc(self, sentence):
-        return [ "noun" ] * len(sentence)
+        return ["noun"] * len(sentence)
 
     def hmm_viterbi(self, sentence):
-        return [ "noun" ] * len(sentence)
-
+        return ["noun"] * len(sentence)
 
     # This solve() method is called by label.py, so you should keep the interface the
-    #  same, but you can change the code itself. 
+    #  same, but you can change the code itself.
     # It should return a list of part-of-speech labelings of the sentence, one
     #  part of speech per word.
     #
@@ -59,4 +58,3 @@ class Solver:
             return self.hmm_viterbi(sentence)
         else:
             print("Unknown algo!")
-

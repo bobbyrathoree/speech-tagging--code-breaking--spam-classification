@@ -8,10 +8,24 @@ Assignment 3 - Part 3
 
 import os
 import re
+import sys
 from collections import Counter
 
-train_data = 'C:/Users/Scott/Documents/train/'
-test_data = 'C:/Users/Scott/Documents/test/'
+# Accept train data folder, test data folder and output file name as command line parameters
+train_data = sys.argv[1]
+test_data = sys.argv[2]
+output_file = sys.argv[3]
+
+# Not sure if / will be including during input, so making sure it exists
+if train_data[:-1] != '/':
+    train_data += '/'
+    
+if test_data[:-1] != '/':
+    test_data += '/'
+
+#train_data = 'C:/Users/Scott/Documents/train'
+#test_data = 'C:/Users/Scott/Documents/test'
+#output_file = 'preds.txt'
 
 # Break line into words w/ Regex
 breaks = re.compile(r'[\w]+')
@@ -131,7 +145,7 @@ test_predictions = []
 for email in test:
     total_spam_p = p_spam
     total_notspam_p = p_notspam
-    
+
     for word in email:
         if word in word_probs['spam']:
             total_spam_p += word_probs['spam'][word] 
@@ -145,7 +159,7 @@ for email in test:
         test_predictions.append('notspam')
 
 '''
-# Check the accuracy of our predictions - Highest achieved = ~60%
+# Check the accuracy of our predictions - Highest achieved = ~67%
 opened_file = open('test-groundtruth.txt', 'r', encoding="Latin-1")
 truth_data = []
         
@@ -162,14 +176,14 @@ for test, truth in zip(test_predictions, truth_data):
         correct_preds += 1
 
 print ("Prediction accuracy is:", correct_preds / len(truth_data))
-
 '''
-# Output predictions for each test e-mail to a flat file
-output_file = 'preds.txt'
 
+# Output predictions for each test e-mail to a flat file
 output = open(output_file, 'w') 
 
 for file, preds in zip(os.listdir(test_data), test_predictions):
     output.write(file + " " + preds + "\n")
 
 output.close()
+
+print ("Output predictions to file", output_file, "completed successfully")

@@ -1,4 +1,11 @@
 #!/usr/local/bin/python3
+
+'''
+Scott Steinbruegge
+Elements of AI, Fall 2019
+Assignment 3 - Part 3
+'''
+
 import os
 import re
 from collections import Counter
@@ -6,11 +13,8 @@ from collections import Counter
 train_data = 'C:/Users/Scott/Documents/train/'
 test_data = 'C:/Users/Scott/Documents/test/'
 
-# Break line into works w/ Regex
+# Break line into words w/ Regex
 breaks = re.compile(r'[\w]+')
-
-# Clean up HTML tags
-html_cleanup =  re.compile(r'<[^>]+>')
 
 # Set load directorys manually (change to input variable at end)
 training_spam = train_data + 'spam/'
@@ -29,9 +33,6 @@ for file in os.listdir(training_spam):
         
         for line in opened_file:
             file_data += line
-        
-        # Cleanup the HTML tag data in the email            
-        file_data = html_cleanup.sub('', file_data)
         
         # Break each e-mail out into inidividual words for bag of words model
         words_in_file = breaks.findall(file_data)
@@ -53,10 +54,7 @@ for file in os.listdir(training_notspam):
         
         for line in opened_file:
             file_data += line
-        
-        # Cleanup the HTML tag data in the email            
-        file_data = html_cleanup.sub('', file_data)
-        
+      
         # Break each e-mail out into inidividual words for bag of words model
         words_in_file = breaks.findall(file_data)
 
@@ -113,9 +111,6 @@ for file in os.listdir(test_data):
         for line in opened_file:
             file_data += line
         
-        # Cleanup the HTML tag data in the email            
-        file_data = html_cleanup.sub('', file_data)
-        
         # Break each e-mail out into inidividual words for bag of words model
         words_in_file = breaks.findall(file_data)
 
@@ -139,17 +134,18 @@ for email in test:
     
     for word in email:
         if word in word_probs['spam']:
-            total_spam_p += word_probs['spam'][word]
+            total_spam_p += word_probs['spam'][word] 
         
         if word in word_probs['notspam']:
-            total_notspam_p += word_probs['notspam'][word]
+            total_notspam_p += word_probs['notspam'][word] 
     
     if total_spam_p > total_notspam_p:
         test_predictions.append('spam')
     else:
         test_predictions.append('notspam')
 
-# Check the accuracy of our predictions
+'''
+# Check the accuracy of our predictions - Highest achieved = ~60%
 opened_file = open('test-groundtruth.txt', 'r', encoding="Latin-1")
 truth_data = []
         
@@ -166,3 +162,14 @@ for test, truth in zip(test_predictions, truth_data):
         correct_preds += 1
 
 print ("Prediction accuracy is:", correct_preds / len(truth_data))
+
+'''
+# Output predictions for each test e-mail to a flat file
+output_file = 'preds.txt'
+
+output = open(output_file, 'w') 
+
+for file, preds in zip(os.listdir(test_data), test_predictions):
+    output.write(file + " " + preds + "\n")
+
+output.close()

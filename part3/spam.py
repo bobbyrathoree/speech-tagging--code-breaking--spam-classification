@@ -183,3 +183,5 @@ for file, preds in zip(sorted(os.listdir(test_data)), test_predictions):
     output.write(file + " " + preds + "\n")
 
 output.close()
+
+print ("Output of test file predictions saved to :", output_file)

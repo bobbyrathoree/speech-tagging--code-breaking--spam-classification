@@ -39,7 +39,7 @@ notspam = []
 test = []
 
 # Load training spam data
-for file in os.listdir(training_spam):
+for file in sorted(os.listdir(training_spam)):
     if file != "cmds":
         opened_file = open(training_spam + file, 'r', encoding="Latin-1")
         file_data = ''
@@ -60,7 +60,7 @@ for file in os.listdir(training_spam):
         spam.append(word_output)
 
 # Load training notspam data
-for file in os.listdir(training_notspam):
+for file in sorted(os.listdir(training_notspam)):
     if file != "cmds":
         opened_file = open(training_notspam + file, 'r', encoding="Latin-1")
         file_data = ''
@@ -116,7 +116,7 @@ for key, value in total_word_count.items():
     word_probs['notspam'][key] = word_count_in_not_spam / len(notspam_words) # notspam_words
 
 # Load test data
-for file in os.listdir(test_data):
+for file in sorted(os.listdir(test_data)):
     if file != "cmds":
         opened_file = open(test_data + file, 'r', encoding="Latin-1")
         file_data = ''
@@ -158,7 +158,6 @@ for email in test:
     else:
         test_predictions.append('notspam')
 
-'''
 # Check the accuracy of our predictions - Highest achieved = ~67%
 opened_file = open('test-groundtruth.txt', 'r', encoding="Latin-1")
 truth_data = []
@@ -176,12 +175,11 @@ for test, truth in zip(test_predictions, truth_data):
         correct_preds += 1
 
 print ("Prediction accuracy is:", correct_preds / len(truth_data))
-'''
 
 # Output predictions for each test e-mail to a flat file
 output = open(output_file, 'w') 
 
-for file, preds in zip(os.listdir(test_data), test_predictions):
+for file, preds in zip(sorted(os.listdir(test_data)), test_predictions):
     output.write(file + " " + preds + "\n")
 
 output.close()

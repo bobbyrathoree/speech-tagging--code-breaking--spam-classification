@@ -20,6 +20,7 @@ Training Process:
   and emission probabiliy. Seperate functions are written for simple, hmm, and complex. So the program label.py takes two arguments (train dataset,test dataset). The model gets trained using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
  Assumptions made:
 There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
+$\mul$
 Word and sentence accuracy achieved with the bc.test dataset:
                       Words correct:     Sentences correct: 
       Ground truth:      100.00%              100.00%

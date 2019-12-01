@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # CSCI B551 Fall 2019
 #
-# Authors: PLEASE PUT YOUR NAMES AND USERIDS HERE
+# Authors: Bobby Rathore
 #
 # based on skeleton code by D. Crandall, 11/2019
 #
@@ -173,7 +173,7 @@ def break_code(encoded_text, corpus_text):
     Referred from: https://bit.ly/2Y4D5qW
     :param encoded_text: encoded file contents
     :param corpus_text: the corpus file contents
-    :return:
+    :return: decoded text
     """
     # Get the initial and transitional probabilities
     initial_probabilities = get_initial_probabilities(corpus_text)
@@ -181,51 +181,57 @@ def break_code(encoded_text, corpus_text):
 
     # Number of iterations to run the sampling for
     epochs = 20000
+    number_of_iterations = 0
 
     # Get the initial encryption (replacement and rearrangement) tables
-    old_replace_table, old_rearrange_table = get_initial_encryption_tables()
+    original_replacement_table, original_rearrangement_table = get_initial_encryption_tables()
 
     # Make a guess
-    original_guess = encode_file(encoded_text, old_replace_table, old_rearrange_table)
+    original_guess = encode_file(encoded_text, original_replacement_table, original_rearrangement_table)
     probability_of_original_guess = get_probability_log(
         original_guess.split(" "), transition_probabilities, initial_probabilities
     )
 
-    updated_replacement_table = copy.deepcopy(old_replace_table)
-    updated_rearrangement_table = copy.deepcopy(old_rearrange_table)
+    # Make a copy of each encryption table for later use
+    updated_replacement_table = copy.deepcopy(original_replacement_table)
+    updated_rearrangement_table = copy.deepcopy(original_rearrangement_table)
 
-    while epochs != 0:
-        old_rearrange_table = copy.deepcopy(updated_rearrangement_table)
-        old_replace_table = copy.deepcopy(updated_replacement_table)
-        flag = random.randint(
-            0, 1
-        )  # generate random number among 0 and 1 to modify one of the two encryption tables
-        if flag == 0:
-            updated_replacement_table = modify_encryption_table(old_replace_table, letters=True)
+    while number_of_iterations <= epochs:
+        original_rearrangement_table = copy.deepcopy(updated_rearrangement_table)
+        original_replacement_table = copy.deepcopy(updated_replacement_table)
+
+        # Based upon 2 "random" numbers, we decide which encryption table to modify
+        random_choice = random.choice(
+            [69, 420]
+        )
+        if random_choice == 69:
+            updated_replacement_table = modify_encryption_table(original_replacement_table, letters=True)
         else:
-            updated_rearrangement_table = modify_encryption_table(old_rearrange_table)
+            updated_rearrangement_table = modify_encryption_table(original_rearrangement_table)
 
-        T_hat = encode_file(
+        # Make a new guess and get its probability
+        new_guess = encode_file(
             encoded_text, updated_replacement_table, updated_rearrangement_table
-        )  # encoding with modified encryption tables
-        T_hat_prob = get_probability_log(
-            T_hat.split(" "), transition_probabilities, initial_probabilities
-        )  # returns prob for guess with given encryption
+        )
+        new_guess_probability = get_probability_log(
+            new_guess.split(" "), transition_probabilities, initial_probabilities
+        )
 
-        if T_hat_prob > probability_of_original_guess:  # new guess is better than old
-            probability_of_original_guess = T_hat_prob
-        else:  # new guess is not better than old
-            if np.random.binomial(1, np.exp(T_hat_prob - probability_of_original_guess)) == 0:
-                if flag == 1:  # changing one of the two encryption tables
-                    updated_rearrangement_table = copy.deepcopy(old_rearrange_table)
+        # If new guess is better than original, make the original equal to new
+        # Else change any of the two encryption tables
+        if new_guess_probability > probability_of_original_guess:
+            probability_of_original_guess = new_guess_probability
+        else:
+            if np.random.binomial(1, np.exp(new_guess_probability - probability_of_original_guess)) == 0:
+                if random_choice == 420:
+                    updated_rearrangement_table = copy.deepcopy(original_rearrangement_table)
                 else:
-                    updated_replacement_table = copy.deepcopy(old_replace_table)
+                    updated_replacement_table = copy.deepcopy(original_replacement_table)
             else:
-                probability_of_original_guess = T_hat_prob
+                probability_of_original_guess = new_guess_probability
 
-        epochs -= 1
+        number_of_iterations += 1
 
-    #    print(math.exp(T_hat_prob),math.exp(T_prob))
     return encode_file(encoded_text, updated_replacement_table, updated_rearrangement_table)
 
 

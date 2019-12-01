@@ -127,9 +127,13 @@ def get_probability_log(
         # If only one letter word, get its initial probability log,
         # Else use and add relative transitional probabilities
         if len(current_word) == 1:
-            probability_of_current_word = math.log(initial_probabilities[current_word[0]])
+            probability_of_current_word = math.log(
+                initial_probabilities[current_word[0]]
+            )
         else:
-            probability_of_current_word = math.log(initial_probabilities[current_word[0]])
+            probability_of_current_word = math.log(
+                initial_probabilities[current_word[0]]
+            )
             for i in range(1, len(current_word)):
                 if (transition_probabilities[current_word[i - 1]][current_word[i]]) > 0:
                     probability_of_current_word += math.log(
@@ -184,10 +188,14 @@ def break_code(encoded_text, corpus_text):
     number_of_iterations = 0
 
     # Get the initial encryption (replacement and rearrangement) tables
-    original_replacement_table, original_rearrangement_table = get_initial_encryption_tables()
+    original_replacement_table, original_rearrangement_table = (
+        get_initial_encryption_tables()
+    )
 
     # Make a guess
-    original_guess = encode_file(encoded_text, original_replacement_table, original_rearrangement_table)
+    original_guess = encode_file(
+        encoded_text, original_replacement_table, original_rearrangement_table
+    )
     probability_of_original_guess = get_probability_log(
         original_guess.split(" "), transition_probabilities, initial_probabilities
     )
@@ -201,13 +209,15 @@ def break_code(encoded_text, corpus_text):
         original_replacement_table = copy.deepcopy(updated_replacement_table)
 
         # Based upon 2 "random" numbers, we decide which encryption table to modify
-        random_choice = random.choice(
-            [69, 420]
-        )
+        random_choice = random.choice([69, 420])
         if random_choice == 69:
-            updated_replacement_table = modify_encryption_table(original_replacement_table, letters=True)
+            updated_replacement_table = modify_encryption_table(
+                original_replacement_table, letters=True
+            )
         else:
-            updated_rearrangement_table = modify_encryption_table(original_rearrangement_table)
+            updated_rearrangement_table = modify_encryption_table(
+                original_rearrangement_table
+            )
 
         # Make a new guess and get its probability
         new_guess = encode_file(
@@ -222,17 +232,28 @@ def break_code(encoded_text, corpus_text):
         if new_guess_probability > probability_of_original_guess:
             probability_of_original_guess = new_guess_probability
         else:
-            if np.random.binomial(1, np.exp(new_guess_probability - probability_of_original_guess)) == 0:
+            if (
+                np.random.binomial(
+                    1, np.exp(new_guess_probability - probability_of_original_guess)
+                )
+                == 0
+            ):
                 if random_choice == 420:
-                    updated_rearrangement_table = copy.deepcopy(original_rearrangement_table)
+                    updated_rearrangement_table = copy.deepcopy(
+                        original_rearrangement_table
+                    )
                 else:
-                    updated_replacement_table = copy.deepcopy(original_replacement_table)
+                    updated_replacement_table = copy.deepcopy(
+                        original_replacement_table
+                    )
             else:
                 probability_of_original_guess = new_guess_probability
 
         number_of_iterations += 1
 
-    return encode_file(encoded_text, updated_replacement_table, updated_rearrangement_table)
+    return encode_file(
+        encoded_text, updated_replacement_table, updated_rearrangement_table
+    )
 
 
 if __name__ == "__main__":

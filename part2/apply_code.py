@@ -11,6 +11,18 @@ import sys
 import encode
 
 
+def get_initial_encryption_tables():
+    letters = list(range(ord("a"), ord("z") + 1))
+    random.shuffle(letters)
+    replace_table = dict(
+        zip(map(chr, range(ord("a"), ord("z") + 1)), map(chr, letters))
+    )
+    rearrange_table = list(range(0, 4))
+    random.shuffle(rearrange_table)
+
+    return replace_table, rearrange_table
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         raise Exception("usage: break_code.py input-file output-file")

@@ -23,7 +23,7 @@ import random
 #                   reverse every sequence of 4 characters, e.g.
 #                   "csci is easy" -> "icsc si ysae"
 #
-def encode(str, replace_table, rearrange_table):
+def encode_file(str, replace_table, rearrange_table):
     # apply replace table
     str2 = str.translate({ord(i): ord(replace_table[i]) for i in replace_table})
 

@@ -1,56 +1,26 @@
 # a3
 ## Part 1
-Training: 
- The following probabilities are calculated while training the dataset,
- 1. Initial state probabilities: Out of all the sentences, how much times a particular P of Speech starts the sentence.
- 2. Transition probabilities: Calculate the transition from one POS to another POS by taking subsequent
-                              pairs of words.
- 3. Emission probabilities: Calculate the probability of a any word occuring as different Parts of Speech
+Training Process: 
+ The following probabilities are calculated while training,
+ 1. Initial probability: Out of all the sentences, how much times a particular Part of Speech starts in the sentence.
+ 2. Transition probability: Calculating the probability of transition from one POS to another POS by taking subsequent pairs of words.
+ 3. Emission probability: Calculating the probability of any word occuring as different Parts of Speech
+ Simple Model:
+ Naive Bayes Algorithm was used to calculate the posterior probability.
+                    P(A|B) = P(A)* p(B|A)  / P(B) 
+  Log is taken of the given posterior to calcualte the cost and minimum cost is picked up for effectiveness.
+ HMM model:
+ Being an exponential chai, Viterbi decoding comes in handy , For first word, initial probability of each POS * corresponding emission probability of given word and calculated probability is stored in dictionary structure with POS as key. Similarly the step is repeated for remaining words as product of transition from particular POS from previous state to current state POS and corresponding probability of that POS in previous state. This feature extraction is done for all POS. With these transition , the probabilities obtained are quite small hence log is taken to calculate the cost.Finding path with minimum cost is the goal of the algorithm.
 
- Simplified model abstraction:
-  We used Naive Bayes method for our simplified model. Naive Bayes equation for calculating posterior probability
-  is as follows,
-                    P(A|B) = p(B|A) * P(A) / P(B)
-  Here, P(B)(Probability of a given word) is common among all words so we eliminate it in our calculations.
-  The calculated P(B) will be proportional to the actual probabilities. For calculating the probability of a
-  POS for a word, the emission probability of the POS given word is multiplied by the probability of the
-  POS occuring in the training data. Natural logarithms are taken for the calculated probabilities which converts
-  the probabilities to cost. For predicting the POS of a word we take the POS which has minimum cost.  
-
- HMM model abstraction:
-  As the HMM model has a chain structure, Viterbi decoding is used for predicting the parts of speech of
-  words. For calculating the POS probabilities of the first word the initial probability of each pos is
-  multiplied with their corresponding emission probabilities given the word and the calculated probability
-  is stored in a dictionary with the POS as the key. And to calculate the POS probabilities of the remaining
-  words the probability of transition from a particular POS of previous state to a particular POS of current
-  state is multiplied with the probability of the that POS in previous state. This is done for all POS in 
-  previous state and the maximum is taken and multiplied with the emission probability of that POS given word.
-  The same is repeated for all POS for the current state and the probabilities are stored in a dictionary.
-  As the probabilities are too low natural logarithm is taken to convert them to cost, higher the probability
-  lower the cost. The correct sequence of words is predicted by backtracking from the last word to the first 
-  word using the  path with minimum cost.
-
- Complex model abstraction:
-  As the complex model doesnot have a chain structure Markov Chain Monte Carlo is used instead of Viterbi 
-  algorithm. Initially all the words are assumed to be noun and gibbs sampling is done for 5000 iterations 
-  with warmup iterations as 4000. For calculating the probabilities of each pos for gibbs sampling the 
-  transition probabilities between the current state and previous state is multiplied with the transition 
-  probability between the current state and the state before the previous state and the emission probability
-  of a POS. The same is calculated for all POS for the word and given as the probability for sampling.
-  The POS with the max probability at the end of iteration is predicted as the POS.
+ Complex model
+ MCMC is used here and as chain structure is missing , Viterbi cannot be applied here. Initial assumption as all words are noun , gibbs sampling is done for 6000 repition and 2500 warmup iteration. Here 3 states are taken into consideration second previous , previous and current state. For each POS , transition probability between current and previous is mulitiplied with probability of transition between second previous and current with emission prob of POS. Similar repition is done for all POS.POS with max prob at end of iteration completion is predicted as POS.
   
  Description of program working:
-  This program takes the bc.train as input to calculate the initial state probabilities, transition probabilities,
-  and emission probabilities using the tuple combination of word and POS provided by the skeleton code. The 
-  probabilities are stored in seperate dictionaries. Seperate functions are written for Simple, HMM, and complex 
-  model. So the program label.py takes two arguments (training dataset and test dataset). The model gets trained 
-  using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
-
+  This program takes the bc.train as input to calculate the initial probability, transition probability,
+  and emission probabiliy. Seperate functions are written for simple, hmm, and complex. So the program label.py takes two arguments (train dataset,test dataset). The model gets trained using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
  Assumptions made:
-  1) It is obvious that emission probabilities of a POS will not have all the words in English language, in 
-     instances where a word is not in the dictionary of the POS for emission probability the probability is
-     assumed to be 10^-10.
- Word and sentency accuracy achieved with the bc.test dataset:
+There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
+Word and sentence accuracy achieved with the bc.test dataset:
                       Words correct:     Sentences correct: 
       Ground truth:      100.00%              100.00%
             Simple:       97.62%               66.67%

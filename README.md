@@ -21,8 +21,9 @@ Training Process:
  Assumptions made:
 There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
 Word and sentence accuracy achieved with the bc.test dataset:
-Table|Words correct:|Sentences correct: 
-      Ground truth:      100.00%              100.00%
+Table| Words correct:| Sentences correct: 
+--- | --- | ---
+Ground truth:      100.00%              100.00%
             Simple:       97.62%               66.67%
                HMM:       97.84%               66.86%
            Complex:       92.48%               45.35%

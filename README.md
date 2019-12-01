@@ -21,9 +21,10 @@ Training Process:
  Assumptions made:
 There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
 Word and sentence accuracy achieved with the bc.test dataset:
-Table| Words correct:| Sentences correct: 
----|---|---
-
+Markdown | Less | Pretty
+--- | --- | ---
+*Still* | `renders` | **nicely**
+1 | 2 | 3
 
                             
                                

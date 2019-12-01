@@ -1,5 +1,25 @@
 # a3
 ## Part 1
+Training Process: 
+ The following probabilities are calculated while training,
+ 1. Initial probability: Out of all the sentences, how much times a particular Part of Speech starts in the sentence.
+ 2. Transition probability: Calculating the probability of transition from one POS to another POS by taking subsequent pairs of words.
+ 3. Emission probability: Calculating the probability of any word occuring as different Parts of Speech
+ Simple Model:
+ Naive Bayes Algorithm was used to calculate the posterior probability.
+                    P(A|B) = P(A)* p(B|A)  / P(B) 
+  Log is taken of the given posterior to calcualte the cost and minimum cost is picked up for effectiveness.
+ HMM model:
+ Being an exponential chai, Viterbi decoding comes in handy , For first word, initial probability of each POS * corresponding emission probability of given word and calculated probability is stored in dictionary structure with POS as key. Similarly the step is repeated for remaining words as product of transition from particular POS from previous state to current state POS and corresponding probability of that POS in previous state. This feature extraction is done for all POS. With these transition , the probabilities obtained are quite small hence log is taken to calculate the cost.Finding path with minimum cost is the goal of the algorithm.
+
+ Complex model
+ MCMC is used here and as chain structure is missing , Viterbi cannot be applied here. Initial assumption as all words are noun , gibbs sampling is done for 6000 repition and 2500 warmup iteration. Here 3 states are taken into consideration second previous , previous and current state. For each POS , transition probability between current and previous is mulitiplied with probability of transition between second previous and current with emission prob of POS. Similar repition is done for all POS.POS with max prob at end of iteration completion is predicted as POS.
+  
+ Description of program working:
+  This program takes the bc.train as input to calculate the initial probability, transition probability,
+  and emission probabiliy. Seperate functions are written for simple, hmm, and complex. So the program label.py takes two arguments (train dataset,test dataset). The model gets trained using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
+ Assumptions made:
+There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
 ## Part 2
 ## Part 3 - Scott Steinbruegge
 

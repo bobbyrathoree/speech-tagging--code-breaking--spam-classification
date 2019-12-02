@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 
 '''
+CS B551 Fall 2019, Assignment #3
 Sharad Singh  (singshar)
 Scott Steinbruegge (srsteinb)
 Bobby Singh Parmeshwardeen Rathore (brathore)   

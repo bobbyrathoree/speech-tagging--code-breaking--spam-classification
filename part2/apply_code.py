@@ -5,8 +5,6 @@
 # be useful for testing purposes
 #
 import random
-import math
-import copy
 import sys
 import encode
 

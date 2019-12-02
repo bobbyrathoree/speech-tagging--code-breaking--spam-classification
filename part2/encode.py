@@ -7,9 +7,6 @@
 # D Crandall, 11/2019
 #
 
-import random
-
-
 # This function takes a string str, and encodes it using two
 #  strategies: a replacement table, where every instance of each
 #  character is replaced with another character (e.g. all a's

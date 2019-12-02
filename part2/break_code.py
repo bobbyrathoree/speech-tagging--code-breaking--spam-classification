@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # CSCI B551 Fall 2019
 #
-# Authors: Bobby Rathore
+# Authors: Bobby Rathore (brathore), Scott Steinbruegge (srsteinb), Sharad Singh (singshar)
 #
 # based on skeleton code by D. Crandall, 11/2019
 #

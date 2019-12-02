@@ -27,55 +27,39 @@ if test_data[:-1] != "/":
 # Break line into words w/ Regex
 breaks = re.compile(r"[\w]+")
 
-# Set load directorys manually (change to input variable at end)
+# Set load directories manually (change to input variable at end)
 training_spam = train_data + "spam/"
 training_notspam = train_data + "notspam/"
 
-spam = []
-notspam = []
-test = []
 
 # Load training spam data
-for file in sorted(os.listdir(training_spam)):
-    if file != "cmds":
-        opened_file = open(training_spam + file, "r", encoding="Latin-1")
-        file_data = ""
-        word_output = []
+def load_data(path: str) -> list:
+    result = list()
+    for file in sorted(os.listdir(path)):
+        if file != "cmds":
+            opened_file = open(path + file, "r", encoding="Latin-1")
+            file_data = ""
 
-        for line in opened_file:
-            file_data += line
+            for line in opened_file:
+                file_data += line
 
-        # Break each e-mail out into inidividual words for bag of words model
-        words_in_file = breaks.findall(file_data)
+            # Break each e-mail out into individual words for bag of words model
+            words_in_file = breaks.findall(file_data)
 
-        # Filter out data that's not helpful
-        for word in words_in_file:
-            if len(word) > 1 and not word.isnumeric() and not "_" in word:
-                # Make all words lower case
-                word_output.append(word.lower())
+            # Filter out data that's not helpful
+            word_output = [
+                word.lower()
+                for word in words_in_file
+                if len(word) > 1 and not word.isnumeric() and "_" not in word
+            ]
 
-        spam.append(word_output)
+            result.append(word_output)
+    return result
 
-# Load training notspam data
-for file in sorted(os.listdir(training_notspam)):
-    if file != "cmds":
-        opened_file = open(training_notspam + file, "r", encoding="Latin-1")
-        file_data = ""
-        word_output = []
 
-        for line in opened_file:
-            file_data += line
-
-        # Break each e-mail out into inidividual words for bag of words model
-        words_in_file = breaks.findall(file_data)
-
-        # Filter out data that's not helpful
-        for word in words_in_file:
-            if len(word) > 1 and not word.isnumeric() and not "_" in word:
-                # Make all words lower case
-                word_output.append(word.lower())
-
-        notspam.append(word_output)
+spam = load_data(training_spam)
+notspam = load_data(training_notspam)
+test = load_data(test_data)
 
 # Combine spam and notspam training data
 train = spam + notspam
@@ -114,28 +98,8 @@ for key, value in total_word_count.items():
         notspam_words
     )  # notspam_words
 
-# Load test data
-for file in sorted(os.listdir(test_data)):
-    if file != "cmds":
-        opened_file = open(test_data + file, "r", encoding="Latin-1")
-        file_data = ""
-        word_output = []
-
-        for line in opened_file:
-            file_data += line
-
-        # Break each e-mail out into inidividual words for bag of words model
-        words_in_file = breaks.findall(file_data)
-
-        # Filter out data that's not helpful
-        for word in words_in_file:
-            if len(word) > 1 and not word.isnumeric() and not "_" in word:
-                # Make all words lower case
-                word_output.append(word.lower())
-
-        test.append(word_output)
-
-# Now we can compute the prior and conditional probabilities using the training data and apply it to the test set to see if we can classify spam e-mails correctly
+# Now we can compute the prior and conditional probabilities using the training
+# data and apply it to the test set to see if we can classify spam e-mails correctly
 p_spam = len(spam) / len(train)
 p_notspam = len(notspam) / len(train)
 

@@ -1,14 +1,14 @@
 # a3
-## Part 1
+## Part 1: Part-of-speech tagging
 Training Process: 
  The following probabilities are calculated while training,
  1. Initial probability: Out of all the sentences, how much times a particular Part of Speech starts in the sentence.
  2. Transition probability: Calculating the probability of transition from one POS to another POS by taking subsequent pairs of words.
- 3. Emission probability: Calculating the probability of any word occuring as different Parts of Speech
+ 3. Emission probability: Calculating the probability of any word occurring as different Parts of Speech
  Simple Model:
  Naive Bayes Algorithm was used to calculate the posterior probability.
                     P(A|B) = P(A)* p(B|A)  / P(B) 
-  Log is taken of the given posterior to calcualte the cost and minimum cost is picked up for effectiveness.
+  Log is taken of the given posterior to calculate the cost and minimum cost is picked up for effectiveness.
  HMM model:
  Being an exponential chai, Viterbi decoding comes in handy , For first word, initial probability of each POS * corresponding emission probability of given word and calculated probability is stored in dictionary structure with POS as key. Similarly the step is repeated for remaining words as product of transition from particular POS from previous state to current state POS and corresponding probability of that POS in previous state. This feature extraction is done for all POS. With these transition , the probabilities obtained are quite small hence log is taken to calculate the cost.Finding path with minimum cost is the goal of the algorithm.
 
@@ -17,13 +17,25 @@ Training Process:
   
  Description of program working:
   This program takes the bc.train as input to calculate the initial probability, transition probability,
-  and emission probabiliy. Seperate functions are written for simple, hmm, and complex. So the program label.py takes two arguments (train dataset,test dataset). The model gets trained using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
+  and emission probability. Separate functions are written for simple, hmm, and complex. So the program label.py takes two arguments (train dataset,test dataset). The model gets trained using the first argument (bc.train) and tests the trained model on the second argument(bc.test).
  Assumptions made:
-There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10 
-## Part 2
-## Part 3 - Scott Steinbruegge
+There can be situations where the word is not available in the dictionary as it would not have occurred hence it's emission probability is assumed to be 10^-10 
+## Part 2: Code Breaking
 
-For this part of the assignment, I attemped to implement a Naive Bayes classifer from scratch without using anything except for the Python standard libraries. The goal was to classify e-mails as spam or not spam based on a set of data we were provided at the beginning of the assignment. High level of how the code works: it uses the spam/notspam training data provided to train the classifer and then those probabilities aree used to predict the class label on test data set. Since there was no skeleton code provided, I will attempt to walk through my code in detail below in order to explain how I attemped to solve this problem.
+As per the **Metropolis-Hastings** algorithm, we start out by setting up the initial and transitional probabilities. Initial probabilities are computed by simply setting the first character of every word as the key with 1 as it's value, then normalizing it using the total sum of all keys' values. The transitional probabilities are hashes with each value itself a hash. Each value of the dictionary value is then mapped with the relative frequency of other following characters, then finally normalized with the sum of all values for one given key, for each key respectively.
+
+Then, we split the corpus into keywords/tokens to use them later. From the file *apply_code.py*, we used some helper code to generate replacement and rearrangement tables. Once we have the encryption tables, we start making guesses using the *encode_file()* (changed from encode()) method from encode.py by passing in the encoded text along with the initial and transitional probabilities. Then we calculate the log probability of the guess that we just made. Since we'll update the encryption tables later on for each iteration, we create a copy of the original encryption tables so that we can compare later.
+
+Finally, we start sampling/training for 20000 epochs. For each epoch we modify either of the encryption tables first based on a "random" selection. Then, we make a new guess and get its log probability to check if it is better than the original guess' probability. If it is, we change the original guess' probability to the better one and go to the next iteration. If not, we again modify either of the encryption tables and set the original guess' probability to the new one after updating the original encryption tables with modified ones.
+
+At the end after all iterations, once we have the updated encryption tables (which are essentially decryption tables now), we decode the encoded text using those, return to the main function and write the same to requested file.
+
+Since we're dealing with almost total randomness when it comes to modifying the encryption tables for each iteration, we tested with some random seeds for each test file that gave us the best readable output in most cases. We went ahead and saved them just in case we test on those exact files again. If we test on some other file that is not in the *working_hash*, we go with totally random seed. We also added a helper function that puts in an animation while the document is getting decoded, and prints the total time taken at the end in seconds.
+
+
+## Part 3: Spam classification
+
+For this part of the assignment, I attempted to implement a Naive Bayes classifer from scratch without using anything except for the Python standard libraries. The goal was to classify e-mails as spam or not spam based on a set of data we were provided at the beginning of the assignment. High level of how the code works: it uses the spam/notspam training data provided to train the classifer and then those probabilities aree used to predict the class label on test data set. Since there was no skeleton code provided, I will attempt to walk through my code in detail below in order to explain how I attemped to solve this problem.
 
 The spam.py file created for this assignment accepts 3 command line arguments: training data path, test data path and an output file name. These variables are set at the beginning of the code and then test/train directories and slashes are appended to the proper paths where needed. Next, I setup a variable to break the e-mail messages out into individual words for the bag of words model using regex. Next I imported the training data for the spam and notspam subfolders. Each of these loads involved looping through all of the files in each directory, appending all of the lines of an e-mail into a single string variable, which I could then run the regex findall function against to split the string into a list of invidividual words conatined in the e-mail. It then loops through the list to determine which words to discard such as words with a single letter and then converts each word to lower case which then gets output to a final list of cleaned up words from an individual e-mail and appends it to another list for either spam or notspam data that I've cleaned up for use in the bag of words model.
 

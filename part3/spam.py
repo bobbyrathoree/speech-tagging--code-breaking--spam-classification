@@ -1,10 +1,10 @@
 #!/usr/local/bin/python3
 
-"""
-Scott Steinbruegge
-Elements of AI, Fall 2019
-Assignment 3 - Part 3
-"""
+'''
+Sharad Singh  (singshar)
+Scott Steinbruegge (srsteinb)
+Bobby Singh Parmeshwardeen Rathore (brathore)   
+'''
 
 import os
 import re

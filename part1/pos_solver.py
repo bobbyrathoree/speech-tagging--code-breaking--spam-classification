@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # CSCI B551 Fall 2019
 #
-# Authors: Sharad Singh (singshar), Scott Steinbruegge (srsteinb), Bobby Rathore (brathore),
+# Authors: Sharad Singh (singshar), Scott Steinbruegge (srsteinb), Bobby Rathore (brathore)
 #
 # (Based on skeleton code by D. Crandall)
 #
@@ -235,7 +235,7 @@ class Solver:
 
     def posterior_first(self, word):
         """
-        Given a first word in a sentence , calcualte the posterior for all POS
+        Given a first word in a sentence , calculate the posterior for all POS
     
         """
         prob = {}
@@ -252,7 +252,7 @@ class Solver:
 
     def post_second(self, word, previous):
         """
-        Given a second word in a sentence , calcualte the posterior for all POS
+        Given a second word in a sentence , calculate the posterior for all POS
         """
         prob = {}
         if word not in prob.keys():
@@ -284,7 +284,8 @@ class Solver:
 
     def posterior_else(self, word, previous, previous_second):
         """
-        This function calculated posterior probability of words other than first and second one and calculates posterior of all parts of speech
+        This function calculated posterior probability of words other than
+        first and second one and calculates posterior of all parts of speech.
         """
         prob = {}
         if word not in prob.keys():

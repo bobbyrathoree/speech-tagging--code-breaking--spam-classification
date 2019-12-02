@@ -8,15 +8,24 @@
 ####
 """
 During initial training process, initial probability, transition probability and emission probability is calculated.
-Simple: Here we have used the naive baye's approach to calculate a posterior given a prior and likelihood where denominator can be ingnored being a normalization 
-constant. Taking log of posterior is to get a cost function and choosing the minimum cost is the idea
-HMM using Viterbi: Here we are calculating  a chain of bayesian networks with their emission probability,where the emission probability of previous state is multiplied to current state and 
-the sequence is repeated to observe a pattern and the sequence with MAP is considered .
-Complex:Here initially all words are supposed to be noun and gibbs sampling is done for repition=6000 and warmup=2500. Each POS for gibbs sampling , transition probability
-b/w current and previous state is multiplied with transition probability b/w current, state just before previous and emission prob of POS.
+
+Simple: Here we have used the naive bayes approach to calculate a posterior given a prior and likelihood where
+denominator can be ignored being a normalization constant. Taking log of posterior is to get a cost function
+and choosing the minimum cost is the primary idea.
+
+HMM using Viterbi: Here we are calculating  a chain of bayesian networks with their emission probability,
+where the emission probability of previous state is multiplied to current state and the sequence is repeated
+to observe a pattern and the sequence with MAP is considered.
+
+Complex: Here initially all words are supposed to be noun and gibbs sampling is done for repetition = 6000 and
+warmup = 2500. Each POS for gibbs sampling, transition probability b/w current and previous state is multiplied
+with transition probability b/w current, state just before previous and emission prob of POS.
+
 Assumptions:
-There can be situations where the word is not available in the dictionary as it would not have occured hence it's emission probability is assumed to be 10^-10
- Word and sentency accuracy achieved with the bc.test dataset:
+There can be situations where the word is not available in the dictionary as it would not have occured hence it's
+emission probability is assumed to be 10^-10
+
+ Word and sentence accuracy achieved with the bc.test dataset:
                       Words correct:     Sentences correct: 
       Ground truth:      100.00%              100.00%
             Simple:       97.62%               66.67%
@@ -354,7 +363,7 @@ class Solver:
         """
         Given a sentence, list of POS labels are calculated using MCMC algo
         """
-        repition = 6000
+        repetition = 6000
         warmup = 2500
         pos_mcmc_dict = {"pos_" + str(i): {} for i in range(len(sentence))}
         sequence = ["noun"] * len(sentence)
@@ -364,7 +373,7 @@ class Solver:
                 sample_first = list(
                     np.random.choice(
                         [keys for keys in prob_first.keys()],
-                        repition,
+                        repetition,
                         p=[
                             float(prob_first[keys]) / sum(prob_first.values())
                             for keys in prob_first.keys()
@@ -385,7 +394,7 @@ class Solver:
                 sample_second = list(
                     np.random.choice(
                         [keys for keys in prob_second.keys()],
-                        repition,
+                        repetition,
                         p=[
                             float(prob_second[keys]) / sum(prob_second.values())
                             for keys in prob_second.keys()
@@ -408,7 +417,7 @@ class Solver:
                 sample_other = list(
                     np.random.choice(
                         [keys for keys in prob_other.keys()],
-                        repition,
+                        repetition,
                         p=[
                             float(prob_other[keys]) / sum(prob_other.values())
                             for keys in prob_other.keys()
